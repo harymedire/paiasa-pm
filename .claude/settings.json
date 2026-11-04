@@ -1,0 +1,10 @@
+{
+  "extraKnownMarketplaces": {
+    "paiasa-pm": {
+      "source": { "source": "github", "repo": "harymedire/paiasa-pm" }
+    }
+  },
+  "enabledPlugins": {
+    "paiasa-pm@paiasa-pm": true
+  }
+}
