@@ -6,7 +6,7 @@ One prompt = one verifiable change. If it cannot be reviewed as a single pull re
 
 ## File naming
 
-`.product/handoff/prompts/<NN>-<kebab-title>.md`, e.g. `03-booking-calendar.md`. `NN` follows the dependency order.
+`<project>/plan/prompts/<NN>-<kebab-title>.md`, e.g. `03-booking-calendar.md`. `NN` follows the dependency order.
 
 ## Template
 
@@ -14,7 +14,7 @@ One prompt = one verifiable change. If it cannot be reviewed as a single pull re
 ---
 id: P-03
 title: Booking calendar for salon staff
-mvp_story: US-04, US-05
+plan_items: B04, B05          # IDs from the client documentation
 depends_on: [P-01, P-02]
 parallel_with: [P-04]
 risk_flags: [architecture?, clarity?, performance?, novelty?, security?]   # keep only the flags that apply
@@ -26,7 +26,7 @@ suggested_agents: [implementer, test-engineer, ui-verifier, security-reviewer]
 <What the user gets from this task, 1–2 sentences.>
 
 # Context
-<Why we are doing this; link to MVP story and decisions (D-ids); what previous prompts built.>
+<Why we are doing this; link to the plan items (documentation IDs) and plan sections; what previous prompts built.>
 
 # Requirements
 1. <Precise, testable requirement>
@@ -53,11 +53,11 @@ suggested_agents: [implementer, test-engineer, ui-verifier, security-reviewer]
 1. <Test steps; what to run; what to show at the end (screenshot, test output, staging URL)>
 
 # Assumptions & open questions
-- [ASSUMPTION] <...>: if wrong, stop and ask PM team.
+- [ASSUMPTION] <...>: if wrong, stop and ask the PM.
 - Q: <question the developer must not guess>
 
 # If you see a better approach
-You may propose a different solution if it better meets the goal and acceptance criteria. Explain the trade-off in the PR description; do not silently change scope. The proposal goes back to the PM team's decision log.
+You may propose a different solution if it better meets the goal and acceptance criteria. Explain the trade-off in the PR description; do not silently change scope. The proposal goes back to the PM, who logs it in the plan's change log.
 
 # Definition of done
 - All acceptance criteria covered by automated tests that pass.
@@ -67,11 +67,11 @@ You may propose a different solution if it better meets the goal and acceptance 
 
 ## Index file
 
-`.product/handoff/README.md`:
+`<project>/plan/prompts/README.md`:
 
 ```markdown
 # Handoff: <project>
-Generated: <date>, from decisions up to D-0xx
+Generated: <date>, from plan-razvoja.md (change log entry <date>)
 
 ## How to use
 Give prompts to the DEV team in order: `/paiasa-dev:dev-team <path to prompt>` (or the whole folder).
@@ -83,15 +83,15 @@ Give prompts to the DEV team in order: `/paiasa-dev:dev-team <path to prompt>` (
 ## Project rules for the dev team
 <Stack, conventions, environments, compliance notes: becomes CLAUDE.md content>
 
-## Team recommendation
-See team.md
+## Team
+See plan-razvoja.md §6
 ```
 
-## Executability check (Tech Skeptic, criterion H2)
+## Executability check (self-check before handing prompts over)
 
 A prompt fails if any of these is true:
 - An acceptance criterion cannot be turned into a test.
 - A required interface, entity or rule is referenced but not defined anywhere.
-- It depends on a decision still open in decisions-for-you.md (then mark it blocked instead).
+- It depends on a client question still open in the plan (then mark it blocked instead).
 - It would take more than one reviewable PR.
 - Security or data-handling rules are missing for a task that touches auth, payments or personal data.

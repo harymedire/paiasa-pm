@@ -31,10 +31,10 @@ Example:
 
 ## Research files
 
-- `.product/research/brief.md`: input as received, interpreted problem, assumptions, open questions.
-- `.product/research/market.md`: market, segments, trends, regulation.
-- `.product/research/competitors.md`: table: name, link, target, core features, pricing, strengths, weaknesses, notes; plus "do nothing" / manual alternatives.
-- `.product/research/users.md`: segments, jobs-to-be-done, pains, evidence (public reviews, forums, data), assumptions to validate.
-- `.product/research/solutions.md`: technical and product approaches, APIs, build-vs-buy options.
-- `.product/research/unknowns.md`: each unknown with verification plan.
-- `.product/research/sources.md`: all sources with dates.
+- `<project>/plan/research/brief.md`: input as received, interpreted problem, assumptions, open questions.
+- `<project>/plan/research/market.md`: market, segments, trends, regulation.
+- `<project>/plan/research/competitors.md`: table: name, link, target, core features, pricing, strengths, weaknesses, notes; plus "do nothing" / manual alternatives.
+- `<project>/plan/research/users.md`: segments, jobs-to-be-done, pains, evidence (public reviews, forums, data), assumptions to validate.
+- `<project>/plan/research/solutions.md`: technical and product approaches, APIs, build-vs-buy options.
+- `<project>/plan/research/unknowns.md`: each unknown with verification plan.
+- `<project>/plan/research/sources.md`: all sources with dates.

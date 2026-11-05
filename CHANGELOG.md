@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.3.0 (2026-11-05)
+
+Novi, jednostavni PM/PO. Stari strogi tim (recenzenti, sudija, provjera usklađenosti) premješten je u zaseban plugin **paiasa-validate**, za slučajeve kad klijent traži provjeru i opravdanost projekta.
+
+- Obim je dokumentacija: plan popunjava samo napor, tim, budžet i kalendar, sve kao procjenu s osnovom i rasponom.
+- Rupe i kontradikcije se navode, ne rješavaju. Nepoznato ide u „Pitanja za klijenta“.
+- Ideje modela idu u prilog „Opciono“, s cijenom.
+- „Presudi“ znači presudi.
+- Radi sam, uz najviše ~5 web pretraga. Agenti se pokreću samo uz izričito „DA“, nakon prijedloga s procjenom troška. Ako trošak premaši odobreni za više od 30 %, staje i pita.
+- Jedan dokument, `plan/plan-razvoja.md`, s 11 fiksnih poglavlja i dnevnikom izmjena. Postojeći plan se ažurira, ne pravi se novi.
+- Bez dokumentacije nudi kratak brief koji korisnik potvrdi prije plana.
+- Pravila preciznosti (cijeli osoba-dani, 0,5 sedmice, novac na 2 cifre).
+- Agenti: `researcher` i novi `plan-reviewer` (presuda + najviše 5 blokirajućih nalaza, jedna runda). Uklonjeni su product-owner, project-manager, head-of-product, delivery-lead, tech-skeptic, judge i consistency-checker (žive u paiasa-validate).
+- DEV promptovi i prihvatanje rada izvođača rade se samo na zahtjev.
+
 ## 0.2.0 (2026-11-05)
 
 Iz stvarnog projekta: tim se satima vrtio u krug (3 kruga revizije, sudija, ponovna provjera, druga presuda, provjera usklađenosti), uglavnom oko sve sitnijih neusklađenosti između dokumenata umjesto da dođe do odluke. Ova verzija zadržava strogost, ali proces brže dolazi do precizne odluke i jasno kaže šta treba od tebe.

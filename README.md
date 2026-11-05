@@ -1,8 +1,12 @@
-# PAIASA PM Team
+# PAIASA PM
 
-Tim agenata za Claude Code u ulozi **Product Ownera i Project Managera**. Daš mu jednu rečenicu, link ili folder. On istraži tržište i konkurenciju, napiše definiciju proizvoda i plan realizacije i provede ih kroz najviše dva nezavisna kruga revizije, a sudija ima zadnju riječ. Na kraju uskladi dokumente i napravi **promptove za DEV tim**, plus preporuku kakav tim projekat treba. Kad ne može dalje bez tebe, stane i na jednoj stranici kaže tačno šta mu treba.
+Plugin za Claude Code koji radi **PM i PO posao**. Daš mu klijentovu dokumentaciju (fajl, folder, link ili tekst), a on je vjerno pretvori u **plan razvoja i procjenu**: obim, faze, napor, tim, budžet, kalendar i rizike. Uz to izdvoji **rupe u dokumentaciji** i **pitanja za klijenta**.
 
-Par plugin: [PAIASA DEV Team](https://github.com/harymedire/paiasa-dev), koji te promptove implementira.
+Radi sam. Agente pokreće samo kad kažeš **„DA“**, i to tek nakon što ti pokaže koje agente predlaže i koliko bi to koštalo.
+
+Za strogu, nezavisnu provjeru opravdanosti projekta (strogi recenzenti, sudija, više rundi) koristi zaseban plugin **PAIASA Validate** (`paiasa-validate`).
+
+Par plugin: [PAIASA DEV Team](https://github.com/harymedire/paiasa-dev), koji implementira promptove.
 
 ## Instalacija
 
@@ -16,8 +20,6 @@ claude plugin marketplace add harymedire/paiasa-pm
 claude plugin install paiasa-pm@paiasa-pm
 ```
 
-Ili unutar Claude Codea: `/plugin marketplace add harymedire/paiasa-pm`, pa `/plugin install paiasa-pm@paiasa-pm`.
-
 **Ažuriranje:**
 
 ```bash
@@ -28,124 +30,64 @@ claude plugin marketplace update paiasa-pm
 claude plugin update paiasa-pm@paiasa-pm
 ```
 
-U otvorenoj sesiji nakon ažuriranja pokreni `/reload-plugins`.
+U otvorenoj sesiji nakon ažuriranja pokreni `/reload-plugins`. Izmjene se rade u ovom repozitoriju, ne u lokalnoj kopiji pod `.claude/plugins/cache`, jer se ona prepiše pri ažuriranju.
 
 ## Korištenje
 
-Otvori Claude Code u **folderu projekta** (novi prazan folder za novi projekat) i pokreni:
+Otvori Claude Code u folderu projekta i pokreni:
 
 ```
-/paiasa-pm:pm-team Aplikacija za online rezervaciju termina u frizerskim salonima u BiH
-/paiasa-pm:pm-team https://link-na-sličan-proizvod.com
-/paiasa-pm:pm-team resume
-/paiasa-pm:pm-team accept .dev/evidence/P-03-booking-calendar.md
+/paiasa-pm:pm-team specifikacija.docx
+/paiasa-pm:pm-team docs/
+/paiasa-pm:pm-team napiši promptove za DEV tim
+/paiasa-pm:pm-team recenziraj plan
+/paiasa-pm:pm-team accept .dev/evidence/P-03.md
 ```
 
-- **Novi projekat:** postavi najviše 5 pitanja koja mijenjaju smjer, pa radi. Ako ne odgovoriš, nastavlja s jasno označenim pretpostavkama.
-- **Nastavak:** ako u folderu postoji `.product/STATE.md`, nastavlja tačno gdje je stao.
-- **Tuđi započeti projekat:** prvo uradi pregled postojećeg materijala i analizu praznina, pa nastavlja.
-- **Prihvatanje:** kad DEV tim vrati paket dokaza, PO agent provjerava svaki kriterij prihvatanja na osnovu samih dokaza. Gdje nešto fali, piše ciljani prompt za ispravku.
+## Pravila
 
-## Tok rada
+- **Obim je dokumentacija.** U plan ulazi samo ono što dokument traži, s njegovim ID-jevima. Popunjava se samo ono što dokument ostavlja prazno (napor, tim, budžet, kalendar), i sve je označeno kao procjena s osnovom i rasponom.
+- **Bez izmišljanja.** Rupe i kontradikcije se navode, ne rješavaju. Nepoznato ide u „Pitanja za klijenta“: zašto je bitno, šta plan pretpostavlja i do kada treba odgovor.
+- **Tvoje je da biraš.** Ideje modela idu u prilog „Opciono“, s cijenom.
+- **„Presudi“ znači presudi.** Model odluči sam i ne vraća ti pitanje.
+- **Agenti samo uz „DA“.** Bez toga model radi sam, uz najviše oko 5 web pretraga. Ako vidi da će preći odobreni trošak za više od 30 %, staje i pita.
+- **Preciznost prema odluci.** Cijeli osoba-dani, sedmice na 0,5, novac kao raspon na dvije cifre.
+- **Recenzije, DEV promptovi i prihvatanje rade se samo na zahtjev.** Recenzija ima jednu rundu, a recenzent daje presudu i najviše 5 blokirajućih nalaza.
 
-```
-0. Intake        → do 5 pitanja tebi ili označene pretpostavke
-1. Istraživanje  → paralelni istraživači: tržište, konkurencija, korisnici, rješenja (s izvorima i datumima)
-2. Nacrt         → Product Owner: product.md  |  Project Manager: delivery-plan.md
-                   Tech Skeptic: tech-assessment.md (kad projekat to traži)
-3. Revizija      → Head of Product + Delivery Lead (+ Tech Skeptic), svaki svježe, po rubrici
-   Trijaža       → mehaničke neusklađenosti (zastario broj, ID, referenca, zaokruživanje) = sitno,
-                   orkestrator ih sam ispravi; nalazi koji zavise od tvoje odluke se ne vrte u krug
-   Gate          → svi obavezni kriteriji zadovoljeni i 0 otvorenih kritičnih/značajnih nalaza
-   Dorada        → ispravka ili obrazloženje (dnevnik odluka); najviše 2 kruga
-   STOP          → ako preostali nalazi zavise od tvoje odluke: "Odluka potrebna" i čeka tebe
-4. Sudija        → jednom, zadnja riječ: poslije 2. kruga, ako broj nalaza ne pada ili se ponavljaju
-                   isti prigovori; poslije njega samo jedna ciljana provjera
-5. Usklađenost   → orkestrator ispravi mehaničko, provjerivač jednom, autor jednom za suštinsko
-6. Predaja       → promptovi za DEV, redoslijed i paralelizam, team.md (ljudi + agenti + modeli)
-7. Tebi          → SUMMARY.md: šta je spremno / šta treba od tebe / šta se mijenja ako odlučiš A ili B
-```
-
-**Agenti predlažu, ti odlučuješ.** Sve što mijenja novac, obaveze, rokove ili osnovni smjer stiže u `decisions-for-you.md` s opcijama, posljedicama i preporukom. Šutnja nikad nije odobrenje.
-
-### Kako se sprječava vrtenje u krug (od 0.2.0)
-
-- **Jedan broj, jedno mjesto.** Budžet, kapacitet, rok, broj Must priča i troškovi servisa pišu se samo u svojoj "vlasničkoj" sekciji; ostali dokumenti se na nju pozivaju (`→ delivery-plan.md §7`), ne prepisuju je.
-- **Preciznost prema odluci.** Procjene u cijelim čovjek-danima, sedmice na 0,5, novac na dvije značajne cifre. Razlika unutar tolerancije nije nalaz.
-- **Test značaja.** Nalaz je značajan samo ako njegova ispravka mijenja odluku, obim, rok, raspon troška ili ono što developer pravi.
-- **Fiksan budžet revizije.** Najviše 2 kruga, 1 sudija, 1 ciljana provjera. Detektor konvergencije: ako broj nalaza ne pada, ide se odmah sudiji.
-- **Ne optimizuje se oko neodlučenog.** Ako je otvoreno npr. "+1 developer ili +1 sedmica", svaka opcija se izračuna jednom, plan ide na preporučenu kao označenu pretpostavku, a kad sve ostalo čeka na to, proces stane i pita tebe.
-- **Bez međusobnog gaženja.** Samo orkestrator piše `decisions.md` i `decisions-for-you.md`; svaki agent ima unaprijed dodijeljen raspon ID-ova i svoj fajl odgovora. ID-ovi se nikad ne prenumerišu.
-
-## Šta dobiješ (u folderu projekta)
+## Šta dobiješ
 
 ```
-.product/
-├── STATE.md               ← gdje smo, šta je sljedeće, šta čeka tebe, potrošeni budžet revizije
-├── SUMMARY.md             ← šta je spremno / šta treba od tebe / šta se mijenja ako odlučiš A ili B
-├── decision-needed.md     ← "Odluka potrebna": jedna stranica, kad proces čeka tebe
-├── research/              ← istraživanje; svaka tvrdnja: [FACT] (izvor + datum) / [INFERENCE] / [ASSUMPTION] / [PROPOSAL]
-├── product.md             ← problem, korisnici, MVP, backlog s user stories i kriterijima prihvatanja, metrike
-├── delivery-plan.md       ← faze, zadaci, zavisnosti, procjene s osnovom, rizici, budžet (raspon), QA/UAT/release
-├── tech-assessment.md     ← tehničke pretpostavke, arhitektura, sigurnost, troškovi
-├── decisions.md           ← dnevnik odluka (sprječava vrtenje u krug)
-├── decisions-for-you.md   ← tvoje odluke
-├── reviews/               ← nalazi po krugovima, trijaža, odgovori autora, presuda sudije, sync-log.md
-└── handoff/
-    ├── README.md          ← redoslijed promptova i pravila projekta
-    ├── team.md            ← preporuka tima: ljudi, dodatni agenti, modeli, obavezne kapije
-    └── prompts/           ← 01-....md, 02-....md: daješ ih DEV timu
+<projekat>/plan/
+├── plan-razvoja.md   ← 11 poglavlja: sažetak, obim, faze i kalendar, napor, kritični put,
+│                        tim, budžet, rizici, rupe, pitanja za klijenta, opciono (+ dnevnik izmjena)
+└── prompts/          ← samo na zahtjev: promptovi za DEV tim
 ```
 
-## Agenti i modeli
+U chatu dobiješ samo 5–10 redova: gdje je fajl, raspon napora i budžeta, 3 najveća rizika i broj pitanja za klijenta.
 
-| Agent | Model | Zašto |
-|---|---|---|
-| Product Owner | Fable | najteže produktne odluke i MVP |
-| Head of Product (recenzent) | Fable | strogi produktni pregled |
-| Tech Skeptic | Fable | tehničke pretpostavke i sigurnost |
-| Judge (sudija) | Fable | presude u zastoju |
-| Project Manager | Opus | plan, zavisnosti, rizici |
-| Delivery Lead (recenzent) | Opus | realnost plana |
-| Researcher | Opus | istraživanje s izvorima |
-| Consistency Checker | Opus | unakrsna provjera (mehaničko vs suštinsko) |
+## Agenti (samo uz tvoje „DA“)
 
-Fable 5.1 je prema Anthropicovoj dokumentaciji model za najzahtjevnije zaključivanje, ali je i najskuplji i najsporiji. Opus 5.5 je preporučeni model za većinu posla. Model se mijenja u polju `model:` u `agents/<agent>.md`.
+| Agent | Model | Za šta | Orijentacioni trošak |
+|---|---|---|---|
+| researcher | Opus | jedna tema istraživanja s izvorima | 130–230k tokena |
+| plan-reviewer | Opus | jedna recenzija: proizvod, isporuka ili tehnika | 140–310k tokena |
 
-## Predaja DEV timu
-
-1. Instaliraj [PAIASA DEV Team](https://github.com/harymedire/paiasa-dev).
-2. U repozitoriju koda: `/paiasa-dev:dev-team <putanja do .product/handoff>`. Prvi put daj cijeli `handoff` folder, da DEV tim pročita i `team.md`.
-3. Kad DEV vrati dokaze, ovdje pokreni `/paiasa-pm:pm-team accept <putanja do evidence fajla>`.
+Trošak je izmjeren na jednoj stvarnoj sesiji: ~45 pokretanja agenata potrošilo je ~26 % sedmičnog limita.
 
 ## Struktura plugina
 
 ```
 .claude-plugin/plugin.json, marketplace.json
-skills/pm-team/SKILL.md          ← orkestracija cijelog procesa
-skills/pm-team/reference/        ← rubrika, format nalaza, standardi istraživanja, šabloni,
-                                   stanje i odluke, izlazi za korisnika (odluka potrebna, sažetak),
-                                   format dev prompta, preporuka tima
-agents/                          ← 8 agenata
+skills/pm-team/SKILL.md            ← cijeli način rada
+skills/pm-team/reference/          ← standardi istraživanja, format DEV prompta
+agents/                            ← researcher, plan-reviewer
 ```
 
-## Napomene
-
-- Jedan potpuni prolaz koristi desetine agentskih poziva. Istraživanje se radi jednom, a revizija ima fiksan budžet (2 kruga + sudija + 1 provjera).
-- Trenutna verzija: 0.2.0. Promjene su u [CHANGELOG.md](CHANGELOG.md). Najviše se poboljšava iz stvarnih projekata, pa bilježi gdje griješi.
-- Kod izmjena povećaj `version` u `.claude-plugin/plugin.json`, inače korisnici neće dobiti ažuriranje.
+Promjene su u [CHANGELOG.md](CHANGELOG.md). Kod izmjena povećaj `version` u `.claude-plugin/plugin.json`, inače korisnici neće dobiti ažuriranje.
 
 ## English quick start
 
-```bash
-claude plugin marketplace add harymedire/paiasa-pm
-```
-
-```bash
-claude plugin install paiasa-pm@paiasa-pm
-```
-
-Then, in a project folder, run `/paiasa-pm:pm-team <one sentence | URL | folder | resume | accept <evidence>>`. Documents follow the language of your input; dev prompts default to English.
+Install with the commands above. Then, in a project folder, run `/paiasa-pm:pm-team <client documentation>`. You get one development plan with estimate and client questions, in the language of your input. No agents run without your explicit yes.
 
 ## License
 

@@ -1,12 +1,15 @@
 {
   "name": "paiasa-pm",
   "description": "PAIASA PM Team plugin for Claude Code",
-  "owner": { "name": "harymedire", "url": "https://github.com/harymedire" },
+  "owner": {
+    "name": "harymedire",
+    "url": "https://github.com/harymedire"
+  },
   "plugins": [
     {
       "name": "paiasa-pm",
       "source": "./",
-      "description": "Product Owner + Project Manager agent team that turns one sentence into a reviewed product definition, delivery plan and DEV prompts.",
+      "description": "PM/PO that turns client documentation into a development plan, estimate and client questions. No agents without your yes.",
       "category": "productivity"
     }
   ]

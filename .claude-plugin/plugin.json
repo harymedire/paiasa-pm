@@ -1,11 +1,20 @@
 {
   "name": "paiasa-pm",
-  "displayName": "PAIASA PM Team",
-  "version": "0.2.0",
-  "description": "Product Owner + Project Manager agent team: research, product definition, delivery plan, at most two independent review rounds and a judge with the final say, consistency sync, a one-page decision-needed page when progress depends on you, and ready-to-run prompts for the PAIASA DEV team.",
-  "author": { "name": "harymedire", "url": "https://github.com/harymedire" },
+  "displayName": "PAIASA PM",
+  "version": "0.3.0",
+  "description": "PM/PO for a project: turns the client documentation into a detailed development plan and estimate (scope, phases, effort, team, budget, calendar, risks) plus a list of questions for the client. Works alone; runs agents only after the user says yes to the proposed agents and estimated cost.",
+  "author": {
+    "name": "harymedire",
+    "url": "https://github.com/harymedire"
+  },
   "homepage": "https://github.com/harymedire/paiasa-pm",
   "repository": "https://github.com/harymedire/paiasa-pm",
   "license": "MIT",
-  "keywords": ["product-owner", "project-manager", "agents", "planning", "mvp", "research"]
+  "keywords": [
+    "product-owner",
+    "project-manager",
+    "planning",
+    "estimate",
+    "budget"
+  ]
 }
