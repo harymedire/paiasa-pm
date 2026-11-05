@@ -1,6 +1,6 @@
 # PAIASA PM Team
 
-Tim agenata za Claude Code u ulozi **Product Ownera i Project Managera**. Daš mu jednu rečenicu, link ili folder. On istraži tržište i konkurenciju, napiše definiciju proizvoda i plan realizacije i provede ih kroz nezavisne krugove revizije sa sudijom. Na kraju provjeri usklađenost dokumenata i napravi **promptove za DEV tim**, plus preporuku kakav tim projekat treba.
+Tim agenata za Claude Code u ulozi **Product Ownera i Project Managera**. Daš mu jednu rečenicu, link ili folder. On istraži tržište i konkurenciju, napiše definiciju proizvoda i plan realizacije i provede ih kroz najviše dva nezavisna kruga revizije, a sudija ima zadnju riječ. Na kraju uskladi dokumente i napravi **promptove za DEV tim**, plus preporuku kakav tim projekat treba. Kad ne može dalje bez tebe, stane i na jednoj stranici kaže tačno šta mu treba.
 
 Par plugin: [PAIASA DEV Team](https://github.com/harymedire/paiasa-dev), koji te promptove implementira.
 
@@ -54,28 +54,43 @@ Otvori Claude Code u **folderu projekta** (novi prazan folder za novi projekat) 
 2. Nacrt         → Product Owner: product.md  |  Project Manager: delivery-plan.md
                    Tech Skeptic: tech-assessment.md (kad projekat to traži)
 3. Revizija      → Head of Product + Delivery Lead (+ Tech Skeptic), svaki svježe, po rubrici
+   Trijaža       → mehaničke neusklađenosti (zastario broj, ID, referenca, zaokruživanje) = sitno,
+                   orkestrator ih sam ispravi; nalazi koji zavise od tvoje odluke se ne vrte u krug
    Gate          → svi obavezni kriteriji zadovoljeni i 0 otvorenih kritičnih/značajnih nalaza
-   Dorada        → ispravka ili obrazloženje (dnevnik odluka); najviše 3 kruga
-4. Sudija        → samo kod zastoja, ponavljanja bez novih dokaza ili poslije 3. kruga
-5. Usklađenost   → unakrsna provjera svih dokumenata
+   Dorada        → ispravka ili obrazloženje (dnevnik odluka); najviše 2 kruga
+   STOP          → ako preostali nalazi zavise od tvoje odluke: "Odluka potrebna" i čeka tebe
+4. Sudija        → jednom, zadnja riječ: poslije 2. kruga, ako broj nalaza ne pada ili se ponavljaju
+                   isti prigovori; poslije njega samo jedna ciljana provjera
+5. Usklađenost   → orkestrator ispravi mehaničko, provjerivač jednom, autor jednom za suštinsko
 6. Predaja       → promptovi za DEV, redoslijed i paralelizam, team.md (ljudi + agenti + modeli)
-7. Tebi          → sažetak + odluke koje su TVOJE (novac, rokovi, smjer), s preporukom
+7. Tebi          → SUMMARY.md: šta je spremno / šta treba od tebe / šta se mijenja ako odlučiš A ili B
 ```
 
 **Agenti predlažu, ti odlučuješ.** Sve što mijenja novac, obaveze, rokove ili osnovni smjer stiže u `decisions-for-you.md` s opcijama, posljedicama i preporukom. Šutnja nikad nije odobrenje.
+
+### Kako se sprječava vrtenje u krug (od 0.2.0)
+
+- **Jedan broj, jedno mjesto.** Budžet, kapacitet, rok, broj Must priča i troškovi servisa pišu se samo u svojoj "vlasničkoj" sekciji; ostali dokumenti se na nju pozivaju (`→ delivery-plan.md §7`), ne prepisuju je.
+- **Preciznost prema odluci.** Procjene u cijelim čovjek-danima, sedmice na 0,5, novac na dvije značajne cifre. Razlika unutar tolerancije nije nalaz.
+- **Test značaja.** Nalaz je značajan samo ako njegova ispravka mijenja odluku, obim, rok, raspon troška ili ono što developer pravi.
+- **Fiksan budžet revizije.** Najviše 2 kruga, 1 sudija, 1 ciljana provjera. Detektor konvergencije: ako broj nalaza ne pada, ide se odmah sudiji.
+- **Ne optimizuje se oko neodlučenog.** Ako je otvoreno npr. "+1 developer ili +1 sedmica", svaka opcija se izračuna jednom, plan ide na preporučenu kao označenu pretpostavku, a kad sve ostalo čeka na to, proces stane i pita tebe.
+- **Bez međusobnog gaženja.** Samo orkestrator piše `decisions.md` i `decisions-for-you.md`; svaki agent ima unaprijed dodijeljen raspon ID-ova i svoj fajl odgovora. ID-ovi se nikad ne prenumerišu.
 
 ## Šta dobiješ (u folderu projekta)
 
 ```
 .product/
-├── STATE.md               ← gdje smo, šta je sljedeće, šta čeka tebe
+├── STATE.md               ← gdje smo, šta je sljedeće, šta čeka tebe, potrošeni budžet revizije
+├── SUMMARY.md             ← šta je spremno / šta treba od tebe / šta se mijenja ako odlučiš A ili B
+├── decision-needed.md     ← "Odluka potrebna": jedna stranica, kad proces čeka tebe
 ├── research/              ← istraživanje; svaka tvrdnja: [FACT] (izvor + datum) / [INFERENCE] / [ASSUMPTION] / [PROPOSAL]
 ├── product.md             ← problem, korisnici, MVP, backlog s user stories i kriterijima prihvatanja, metrike
 ├── delivery-plan.md       ← faze, zadaci, zavisnosti, procjene s osnovom, rizici, budžet (raspon), QA/UAT/release
 ├── tech-assessment.md     ← tehničke pretpostavke, arhitektura, sigurnost, troškovi
 ├── decisions.md           ← dnevnik odluka (sprječava vrtenje u krug)
 ├── decisions-for-you.md   ← tvoje odluke
-├── reviews/               ← nalazi po krugovima, odgovori autora, presuda sudije
+├── reviews/               ← nalazi po krugovima, trijaža, odgovori autora, presuda sudije, sync-log.md
 └── handoff/
     ├── README.md          ← redoslijed promptova i pravila projekta
     ├── team.md            ← preporuka tima: ljudi, dodatni agenti, modeli, obavezne kapije
@@ -93,7 +108,7 @@ Otvori Claude Code u **folderu projekta** (novi prazan folder za novi projekat) 
 | Project Manager | Opus | plan, zavisnosti, rizici |
 | Delivery Lead (recenzent) | Opus | realnost plana |
 | Researcher | Opus | istraživanje s izvorima |
-| Consistency Checker | Opus | unakrsna provjera |
+| Consistency Checker | Opus | unakrsna provjera (mehaničko vs suštinsko) |
 
 Fable 5.1 je prema Anthropicovoj dokumentaciji model za najzahtjevnije zaključivanje, ali je i najskuplji i najsporiji. Opus 5.5 je preporučeni model za većinu posla. Model se mijenja u polju `model:` u `agents/<agent>.md`.
 
@@ -109,14 +124,15 @@ Fable 5.1 je prema Anthropicovoj dokumentaciji model za najzahtjevnije zaključi
 .claude-plugin/plugin.json, marketplace.json
 skills/pm-team/SKILL.md          ← orkestracija cijelog procesa
 skills/pm-team/reference/        ← rubrika, format nalaza, standardi istraživanja, šabloni,
-                                   stanje i odluke, format dev prompta, preporuka tima
+                                   stanje i odluke, izlazi za korisnika (odluka potrebna, sažetak),
+                                   format dev prompta, preporuka tima
 agents/                          ← 8 agenata
 ```
 
 ## Napomene
 
-- Jedan potpuni prolaz koristi desetine agentskih poziva. Istraživanje se radi jednom, a u revizijama samo ciljano.
-- Ovo je prva verzija (0.1.0). Najviše će se poboljšati iz stvarnih projekata, pa bilježi gdje griješi.
+- Jedan potpuni prolaz koristi desetine agentskih poziva. Istraživanje se radi jednom, a revizija ima fiksan budžet (2 kruga + sudija + 1 provjera).
+- Trenutna verzija: 0.2.0. Promjene su u [CHANGELOG.md](CHANGELOG.md). Najviše se poboljšava iz stvarnih projekata, pa bilježi gdje griješi.
 - Kod izmjena povećaj `version` u `.claude-plugin/plugin.json`, inače korisnici neće dobiti ažuriranje.
 
 ## English quick start

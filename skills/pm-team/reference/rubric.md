@@ -8,6 +8,10 @@ The gate passes when:
 
 `minor` findings never block. Numeric scores are informational only.
 
+Findings tagged `Depends on: U-xx` (an open user decision) do not fail the gate; they give the status `pass-pending-user`, and the run stops with a "decision needed" page instead of another revision. Mechanical cross-document inconsistencies are `minor` and are fixed by the orchestrator (see findings-format.md).
+
+A criterion is `satisfied` when it is met at the precision stated in document-templates.md. Do not mark a criterion `partially-satisfied` for a difference inside the rounding tolerance, for a stale copy of a number whose owning section is correct, or for a value that depends on an open user decision that is correctly marked as an assumption.
+
 In the research phase, unknowns are acceptable **if** each has a verification plan (what to check, how, who/when). An unknown without a plan is `not-satisfied`.
 
 ## Product criteria: owned by Head of Product
@@ -35,9 +39,9 @@ In the research phase, unknowns are acceptable **if** each has a verification pl
 | D2 | R | Work is broken into phases and tasks small enough to verify (one task ≈ one reviewable change). | delivery-plan.md §Tasks |
 | D3 | R | Dependencies between tasks (and on external parties/APIs) are explicit, with a critical path. | §Dependencies |
 | D4 | R | Every estimate states its basis (comparable work, spike result, assumption) and a range, not a single number. | §Estimates |
-| D5 | R | Capacity assumption is explicit (team composition, availability) and the timeline is consistent with it. | §Capacity |
+| D5 | R | Capacity assumption is explicit (team composition, availability) and the timeline is consistent with it within the precision tolerance. If team size is an open user decision, the recommended option is marked as an assumption and the others refer to the U-item. | §Capacity |
 | D6 | R | Risk register: each risk has probability, impact, owner, mitigation and trigger. | §Risks |
-| D7 | R | Budget is given as a range with its drivers, or explicitly marked as "needs user input". | §Budget |
+| D7 | R | Budget is given as a range with its drivers (service costs by reference to tech-assessment.md §6), or explicitly marked as "needs user input". | §Budget |
 | D8 | R | QA, UAT and release approach are defined (environments, who accepts, rollback). | §Quality & release |
 | D9 | R | Change management: how scope changes are evaluated against time/cost. | §Change |
 | D10 | R | Reporting cadence and what the user receives (progress, risks, decisions). | §Reporting |

@@ -1,6 +1,40 @@
 # Document templates
 
-Section headings are fixed so reviewers and the consistency checker can reference them. Write content in the user-facing language from STATE.md; keep IDs (US-, D-, R-, P-) unchanged across languages.
+Section headings are fixed so reviewers and the consistency checker can reference them. Write content in the user-facing language from STATE.md; keep IDs (US-, D-, U-, T-, R-, M-, TA-, S-, P-) unchanged across languages.
+
+## Single source of truth
+
+Every shared number and list has exactly **one owning section**. Only that section states the value. Any other document that needs it writes a reference, e.g. `Budget: → delivery-plan.md §7` or `Must stories: → product.md §7`, optionally with the ID it depends on. Never copy the value "for convenience": copies go stale on the next revision and turn into review findings.
+
+| What | Owning section | Others write |
+|---|---|---|
+| MVP scope, in/out list | product.md §6 | `→ product.md §6` |
+| Stories, priorities, Must/Should/Could counts, acceptance criteria | product.md §7 | story IDs only; prompts copy ACs (the one allowed copy, checked in handoff) |
+| NFR targets (load, latency, availability) | product.md §11 | `→ product.md §11` |
+| Tasks, task sizes | delivery-plan.md §3 | task IDs only |
+| Phase ranges, milestones, total duration | delivery-plan.md §2 / §5 | `→ delivery-plan.md §5` |
+| Team composition, availability, capacity (person-days) | delivery-plan.md §6 | `→ delivery-plan.md §6` |
+| Total budget range (people + services + contingency) | delivery-plan.md §7 | `→ delivery-plan.md §7` |
+| Infra and third-party service costs | tech-assessment.md §6 | delivery-plan.md §7 lists `services: → tech-assessment.md §6` as an input to its total (a derived value; when the input changes, the total is re-synced mechanically) |
+| Architecture and stack choice | tech-assessment.md §2 | `→ tech-assessment.md §2` |
+| Decisions | decisions.md (D-id) | `per D-0xx` |
+| Open user decisions and their option costs | decisions-for-you.md (U-id) | `[ASSUMPTION] → U-xx` |
+
+If the tech assessment is inactive, its rows move to delivery-plan.md §7.
+
+## Precision rules
+
+Precision must match the decision it supports. False precision creates findings that change nothing.
+
+| Quantity | Write as | Tolerance (a difference inside it is not a finding) |
+|---|---|---|
+| Effort | range in whole person-days (≥ 10 pd: round to 5 pd) | ± 1 pd or 5% of the total, whichever is larger |
+| Duration | range in weeks, rounded to 0.5 week | ± 0.5 week |
+| Money | range, 2 significant figures (e.g. 18–24k EUR) | ± 5% of the total |
+| Percentages, probabilities | whole numbers, or low / medium / high | ± 5 points |
+| Counts (stories, tasks) | exact | 0 (but a stale copy elsewhere is mechanical) |
+
+Show the arithmetic once, in the owning section (inputs → result). Other sections reference the result.
 
 ## `.product/product.md`: Product Owner
 
@@ -57,7 +91,7 @@ Next 2–3 increments with the hypothesis each tests.
 Version: <n>, based on product.md v<n>
 
 ## 1. Scope
-Exactly the MVP items from product.md §6 (reference IDs).
+Exactly the MVP items from product.md §6 (reference IDs only; do not restate counts).
 
 ## 2. Phases & milestones
 | Phase | Goal | Output | Exit criterion | Range |
@@ -69,13 +103,13 @@ Exactly the MVP items from product.md §6 (reference IDs).
 Internal and external (APIs, vendors, approvals, content). Critical path stated.
 
 ## 5. Estimates
-Range per phase with basis (comparable work / spike / assumption). Total range.
+Range per phase with basis (comparable work / spike / assumption). Total range. Rounded per the precision rules; arithmetic shown once.
 
 ## 6. Capacity
-Assumed team, availability, what changes if team differs.
+Assumed team, availability, capacity in person-days per phase; what changes if team differs. If team size is an open user decision, plan on the recommended option as `[ASSUMPTION] → U-xx` and refer to the other options with `→ U-xx` (their duration and cost deltas live in the U-item). Do not maintain parallel full plans.
 
 ## 7. Budget
-Range with drivers (people, infrastructure, third-party services, contingency); or "needs user input" → U-id.
+Range with drivers (people, services `→ tech-assessment.md §6`, contingency); or "needs user input" → U-id.
 
 ## 8. Risks
 | ID | Risk | Prob. | Impact | Owner | Mitigation | Trigger |

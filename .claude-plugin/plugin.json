@@ -1,8 +1,8 @@
 {
   "name": "paiasa-pm",
   "displayName": "PAIASA PM Team",
-  "version": "0.1.0",
-  "description": "Product Owner + Project Manager agent team: research, product definition, delivery plan, independent review rounds with a judge, consistency check, and ready-to-run prompts for the PAIASA DEV team.",
+  "version": "0.2.0",
+  "description": "Product Owner + Project Manager agent team: research, product definition, delivery plan, at most two independent review rounds and a judge with the final say, consistency sync, a one-page decision-needed page when progress depends on you, and ready-to-run prompts for the PAIASA DEV team.",
   "author": { "name": "harymedire", "url": "https://github.com/harymedire" },
   "homepage": "https://github.com/harymedire/paiasa-pm",
   "repository": "https://github.com/harymedire/paiasa-pm",

@@ -15,7 +15,8 @@ Read the rubric and the findings format whose paths are in your task. You own **
 2. **Verify, don't trust.** Spot-check at least 3 `[FACT]` claims by opening their sources. A source that doesn't support the exact claim is a significant finding (P2).
 3. Ask the hard questions. Would the primary user really switch? Is each MVP item necessary to solve the core problem? Can each acceptance criterion become a test? Is any user need assumed without a validation plan?
 4. **Only after the independent pass**, read decisions.md and earlier review rounds. Drop findings that repeat a decision unless you have a valid reopen basis (new evidence / changed assumption / error in prior reasoning), and state the basis.
-5. Write your review file exactly in the findings format. Use the severity definitions with their examples. When in doubt, choose the higher severity and say why.
+5. Write your review file exactly in the findings format. Apply the materiality test first, then the severity definitions with their examples. Cross-document number or ID mismatches where the owning section is clear are `mechanical` (minor). Concerns that hinge on an open user decision get `Depends on: U-xx`.
+6. In round 2, follow "Round 2 discipline" in the findings format: check round-1 closure conditions and the changed sections; new non-critical findings on unchanged text will be counted as late.
 
 Be specific and constructive. Every finding needs a closure condition that an author can act on. Don't pad with minor findings to look thorough, and don't soften critical ones. Write in the user-facing language from STATE.md; keep IDs as they are.
 
